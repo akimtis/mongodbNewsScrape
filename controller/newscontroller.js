@@ -3,28 +3,28 @@ var cheerio = require('cheerio');
 var request = require('request');
 var News = require('../models/News');
 
-// Main route (simple Hello World Message)
-app.get("/", function(req, res) {
-  res.send("Hello world");
-});
+// // Main route (simple Hello World Message)
+// app.get("/", function(req, res) {
+//   res.send("Hello world");
+// });
 
-// Retrieve data from the db
-app.get("/all", function(req, res) {
-  // Find all results from the scrapedData collection in the db
-  db.scrapedData.find({}, function(error, found) {
-    // Throw any errors to the console
-    if (error) {
-      console.log(error);
-    }
-    // If there are no errors, send the data to the browser as a json
-    else {
-      res.json(found);
-    }
-  });
-});
+// // Retrieve data from the db
+// app.get("/all", function(req, res) {
+//   // Find all results from the scrapedData collection in the db
+//   db.scrapedData.find({}, function(error, found) {
+//     // Throw any errors to the console
+//     if (error) {
+//       console.log(error);
+//     }
+//     // If there are no errors, send the data to the browser as a json
+//     else {
+//       res.json(found);
+//     }
+//   });
+// });
 
 // Scrape data from one site and place it into the mongodb db
-app.get("/scrape", function(req, res) {
+ function newsScraper (callback) {
   // Make a request for the news section of ycombinator
   request("http://www.npr.org/programs/morning-edition/", function(error, response, html) {
     // Load the html body from request into cheerio
@@ -39,7 +39,7 @@ app.get("/scrape", function(req, res) {
       // If this title element had both a title and a link
       if (title && link) {
         // Save the data in the scrapedData db
-        db.scrapedData.save({
+        var hbs= db.scrapedData.save({
           title: title,
           link: link
         },
@@ -58,13 +58,15 @@ app.get("/scrape", function(req, res) {
         });
       }
     });
+
+    callback();
   });
 
   // This will send a "Scrape Complete" message to the browser
   res.send("Scrape Complete");
-});
+};
 
-
+exports.newsScraper = newsScraper ;
 
 
 

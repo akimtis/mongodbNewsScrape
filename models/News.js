@@ -16,7 +16,8 @@ var NewsSchema = new Schema({
     type: String,
     required: true,
     unique: true
-  },
+  };
+});
 
 var News = mongoose.model("News", NewsSchema);
 
